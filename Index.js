@@ -52,7 +52,7 @@ bot.on('message', message => {
             //command 2
             case "ban":
                 bot.commands.get('Test2').execute(message, config, args);
-                console.log("Command prova ||" + Date.now())
+                console.log("Command ban ||" + Date.now())
                 break;
         }
     }});
