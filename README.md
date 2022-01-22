@@ -18,4 +18,16 @@
 > 
 > 7. Then paste it on the "Token" input box in your html document.
 
-**Further instructions will be provided when this configuration is done if needed**
+Your bot first configuration is done now, but how do you invite the bot?
+
+> 1. Go to left panel and press "Oauth2 => URL generator"
+> 
+> 2. On the scopes panel press BOT and then in the BOT PERMISSIONS panel press ADMINISTRATOR permission
+> 
+> 3. Bottom the page press COPY and paste your clipboard into a new tab in your browser.
+
+Now you invited the bot. to configure it, **further instructions will be provided in the html document**
+
+### Thanks for using my bot 🤖
+
+I made all this to learn how js works, any suggestion will be accepted in this page of github!
