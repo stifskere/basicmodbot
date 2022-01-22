@@ -24,19 +24,22 @@ bot.on('guildMemberAdd', member => {
     bot.channel.get('931147953454862408').send("Welcome!");
 });
 
+
+
 bot.on('message', message => {
-    if(message.content.includes(config.Prefix)){
-        let args = message.content.substring(PREFIX.length).split(" ");
+    const msg = message.content.toLowerCase()
+    if(msg.startsWith(config.Prefix)){
+        let args = msg.substring(PREFIX.length).split(" ");
         switch (args[0]) {
 
             //commands
                 //command 1
             case "help":
-                if(message.content.includes("moderation")){
+                if(msg.includes("moderation")){
                     let helpvar = 1;
                     bot.commands.get('Help').execute(message, config, args, helpvar);
                     return;
-                }else if(message.content.toLowerCase().includes("misc")){
+                }else if(msg.includes("misc")){
                     let helpvar = 2;
                     bot.commands.get('Help').execute(message, config, args, helpvar);
                     return;
