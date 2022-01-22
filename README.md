@@ -1,2 +1,2 @@
 # basicmodbot
-Basic customizable moderation bot
+##Basic customizable moderation bot
