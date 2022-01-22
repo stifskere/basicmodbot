@@ -1,8 +1,8 @@
-const {RichEmbed, channel} = require("discord.js.old");
+const {RichEmbed} = require("discord.js.old");
 module.exports = {
     name: 'Help',
     description: "Displays help",
-    execute(message, config, args, helpvar){
+    execute(message, config, args, helpvar, moment){
         //command start lmao
         const Help = new RichEmbed()
             .setColor(config.Embedcolor)
@@ -26,10 +26,9 @@ module.exports = {
         const Helpmisc = new RichEmbed()
             .setColor(config.Embedcolor)
             .setTitle('Misc commands')
-            .addField(',Help', 'Will show this message')
-            .setDescription('There are various help pages for every bot function')
-            .addField(',Help moderation', 'Display help in moderation commands')
-            .addField(',help Misc', 'Will display help in misc commands for fun')
+            .setDescription('There are a few misc commands, most of them about levels')
+            .addField(',level "user"', 'if empty it will return self level value')
+            .addField(',leaderboard', 'Will display a leaderboard with the 3 persons who most talked')
             .setFooter({ text: config.FooterText , iconURL: config.FooterImages });
 
             if(helpvar === 1){
@@ -41,9 +40,7 @@ module.exports = {
             }
 
             const date = new Date();
-            console.log("Command Help || " + date.getHours() + `:` + date.getMinutes() + `:` + date.getSeconds() +` || variabletype ${helpvar}`)
-
-
+            console.log("Command Help || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || variabletype ${helpvar}`)
 
     }
 }

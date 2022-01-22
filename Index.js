@@ -1,6 +1,7 @@
 const Discord = require('discord.js.old');
 const bot = new Discord.Client();
 const config = require("./Config.json")
+const moment = require('moment');
 const token = config.Token;
 const PREFIX = "-";
 const { RichEmbed } = require('discord.js.old');
@@ -20,8 +21,8 @@ bot.on('ready', () => {
     console.log(`Active as ${bot.user.tag}`);
 });
 
-bot.on('guildMemberAdd', member => {
-    bot.channel.get('931147953454862408').send("Welcome!");
+bot.on(GuildMember.add, member => {
+    bot.channel.get('931147953454862408').send(member + " Welcome!");
 });
 
 
@@ -37,15 +38,15 @@ bot.on('message', message => {
             case "help":
                 if(msg.includes("moderation")){
                     let helpvar = 1;
-                    bot.commands.get('Help').execute(message, config, args, helpvar);
+                    bot.commands.get('Help').execute(message, config, args, helpvar, moment);
                     return;
                 }else if(msg.includes("misc")){
                     let helpvar = 2;
-                    bot.commands.get('Help').execute(message, config, args, helpvar);
+                    bot.commands.get('Help').execute(message, config, args, helpvar, moment);
                     return;
                 }
                 let helpvar = 0;
-                bot.commands.get('Help').execute(message, config, args, helpvar);
+                bot.commands.get('Help').execute(message, config, args, helpvar, moment);
                 break;
 
 
@@ -54,6 +55,7 @@ bot.on('message', message => {
                 bot.commands.get('Test2').execute(message, config, args);
                 console.log("Command ban ||" + Date.now())
                 break;
+
         }
     }});
 
