@@ -36,23 +36,26 @@ bot.on('message', message => {
             //commands
                 //command 1
             case "help":
-                if(msg.includes("moderation")){
+                if(args[1] === "moderation"){
                     let helpvar = 1;
                     bot.commands.get('Help').execute(message, config, args, helpvar, moment);
                     return;
-                }else if(msg.includes("misc")){
+                }else if(args[1] === "misc"){
                     let helpvar = 2;
                     bot.commands.get('Help').execute(message, config, args, helpvar, moment);
                     return;
+                }else if(!args[1]){
+                    let helpvar = 0;
+                    bot.commands.get('Help').execute(message, config, args, helpvar, moment);
+                }else{
+                    return;
                 }
-                let helpvar = 0;
-                bot.commands.get('Help').execute(message, config, args, helpvar, moment);
                 break;
 
 
             //command 2
             case "ban":
-                bot.commands.get('Test2').execute(message, config, args);
+                bot.commands.get('Test2').execute(message, config, args, moment);
                 console.log("Command ban ||" + Date.now())
                 break;
 

@@ -13,7 +13,7 @@ module.exports = {
             .addField(',help Misc', 'Will display help in misc commands for fun')
             .setFooter({ text: config.FooterText , iconURL: config.FooterImages });
 
-        const helpmoderation = new RichEmbed()
+        const Helpmoderation = new RichEmbed()
             .setColor(config.Embedcolor)
             .setTitle('Moderation commands')
             .addField(',Help', 'Will show this message')
@@ -32,11 +32,13 @@ module.exports = {
             .setFooter({ text: config.FooterText , iconURL: config.FooterImages });
 
             if(helpvar === 1){
-                message.channel.send(helpmoderation)
+                message.channel.send(Helpmoderation)
             }else if(helpvar === 2){
                 message.channel.send(Helpmisc)
-            }else{
+            }else if(helpvar === 0){
                 message.channel.send(Help)
+            }else if(helpvar >= 4){
+                return;
             }
 
             const date = new Date();
