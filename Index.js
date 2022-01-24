@@ -1,11 +1,11 @@
 const Discord = require('discord.js.old');
+const sqlite = require('sqlite3').verbose();
 const bot = new Discord.Client();
 const config = require("./Config.json")
 const moment = require('moment');
 const token = config.Token;
 const PREFIX = "-";
 const { RichEmbed } = require('discord.js.old');
-const date = new Date();
 
 const fs = require('fs');
 const {GuildMember} = require("discord.js.old");
@@ -22,16 +22,30 @@ bot.on('ready', () => {
     console.log(`Active as ${bot.user.tag}`);
 });
 
+
+
 bot.on(GuildMember.add, member => {
     bot.channel.get('931147953454862408').send(member + " Welcome!");
 });
+
+let reason, target, targetID, amount, cases
 
 bot.on('message', message => {
     const msg = message.content.toLowerCase()
     if(msg.startsWith(config.Prefix)){
         let args = msg.substring(PREFIX.length).split(" ");
-        switch (args[0]) {
 
+        //sqlite database creation
+        const db = new sqlite.Database(`./Databases/${message.guild.id}.db` , sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE)
+        db.run(`CREATE TABLE IF NOT EXISTS data(UserTag TEXT NOT NULL, UserID INTEGER NOT NULL, Cases INTEGER NOT NULL, Messages INTEGER NOT NULL)`) // data table : 4 rows
+        db.run(`CREATE TABLE IF NOT EXISTS cases(Reason TEXT NOT NULL, UserID INTEGER NOT NULL , UserTag TEXT NOT NULL, ModeratorTag TEXT NOT NULL, ModeratorID INTEGER NOT NULL, CaseType TEXT NOT NULL )`)
+        let insertdata = db.prepare(`INSERT INTO data VALUES(?,?,?,?)`)
+        let insertcases = db.prepare(`INSERT INTO cases VALUES(?,?,?,?,?,?)`)
+        let dataquery = `SELECT * FROM data WHERE UserId = ?`;
+        let casesquery = `SELECT * FROM cases WHERE UserId = ?`;
+        let leaderboardquery = `SELECT * FROM data ORDER BY Messages DESC LIMIT 3`
+
+        switch (args[0]) {
             //commands
                 //command 1
             case "help":
@@ -55,8 +69,17 @@ bot.on('message', message => {
 
             //command 2
             case "ban":
-                //totally made by stiff
+                targetID = message.mentions.users.first().id
                 bot.commands.get('Ban').execute(message, args);
+
+                db.get(dataquery, [message.author.id], (err, row) =>{
+                    if(err){console.log(err); return;}
+                    if (row === undefined){console.log("Error!: couldn't add data to the database for bans \nmaybe there is no arguments to write")}
+                    else {
+                        cases = row.Cases
+                        db.run(`UPDATE data SET Cases = ? WHERE UserID = ?`, [cases + 1, targetID])
+                    }
+                })
                 break;
 
                 //command 3
