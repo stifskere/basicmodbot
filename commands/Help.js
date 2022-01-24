@@ -1,5 +1,6 @@
 const {RichEmbed} = require("discord.js.old");
-const config = require("../Config.json")
+const config = require("../Config.json");
+const date = new Date();
 module.exports = {
     name: 'Help',
     description: "Displays help",
@@ -32,6 +33,11 @@ module.exports = {
             .addField(',leaderboard', 'Will display a leaderboard with the 3 persons who most talked')
             .setFooter({ text: config.FooterText , iconURL: config.FooterImages });
 
+        const err3 = new RichEmbed()
+            .setTitle("Error #3")
+            .setColor(config.Errorembedcolor)
+            .addField("This help section dosen't exist", "To see more info about help sections simply input help.")
+
             if(helpvar === 1){
                 message.channel.send(Helpmoderation)
             }else if(helpvar === 2){
@@ -39,10 +45,11 @@ module.exports = {
             }else if(helpvar === 0){
                 message.channel.send(Help)
             }else if(helpvar >= 4){
-                return;
+                message.channel.send(err3);
+                console.log("Command Help || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Error 3`)
             }
 
-            const date = new Date();
+
             console.log("Command Help || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || variabletype ${helpvar}`)
 
     }

@@ -4,6 +4,7 @@ const config = require("../Config.json")
 const moment = require('moment');
 const PREFIX = "-";
 const { RichEmbed } = require('discord.js.old');
+const date = new Date();
 module.exports = {
     name: 'Ban',
     description: "says ping!",
@@ -21,5 +22,6 @@ module.exports = {
         if(!member.bannable) return message.channel.send(err2);
         let reason = args.slice(2).join(' ');
         member.ban(reason);
+        console.log("Command Ban || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Member banned: ${member}`);
     }
 }

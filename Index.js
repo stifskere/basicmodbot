@@ -47,11 +47,8 @@ bot.on('message', message => {
                     let helpvar = 0;
                     bot.commands.get('Help').execute(message, args, helpvar, moment);
                 }else{
-                    const err3 = new RichEmbed()
-                        .setTitle("Error #3")
-                        .setColor(config.Errorembedcolor)
-                        .addField("This help section dosen't exist", "To see more info about help sections simply input help.")
-                    message.channel.send(err3);
+                    let helpvar = 4;
+                    bot.commands.get('Help').execute(message, args, helpvar, moment);
                 }
                 break;
 
@@ -60,7 +57,6 @@ bot.on('message', message => {
             case "ban":
                 //totally made by stiff
                 bot.commands.get('Ban').execute(message, args);
-                console.log("deez nuts");
                 break;
 
                 //command 3
