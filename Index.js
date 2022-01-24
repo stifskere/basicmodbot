@@ -5,6 +5,7 @@ const moment = require('moment');
 const token = config.Token;
 const PREFIX = "-";
 const { RichEmbed } = require('discord.js.old');
+const date = new Date();
 
 const fs = require('fs');
 const {GuildMember} = require("discord.js.old");
@@ -25,8 +26,6 @@ bot.on(GuildMember.add, member => {
     bot.channel.get('931147953454862408').send(member + " Welcome!");
 });
 
-
-
 bot.on('message', message => {
     const msg = message.content.toLowerCase()
     if(msg.startsWith(config.Prefix)){
@@ -38,27 +37,36 @@ bot.on('message', message => {
             case "help":
                 if(args[1] === "moderation"){
                     let helpvar = 1;
-                    bot.commands.get('Help').execute(message, config, args, helpvar, moment);
+                    bot.commands.get('Help').execute(message, args, helpvar, moment);
                     return;
                 }else if(args[1] === "misc"){
                     let helpvar = 2;
-                    bot.commands.get('Help').execute(message, config, args, helpvar, moment);
+                    bot.commands.get('Help').execute(message, args, helpvar, moment);
                     return;
                 }else if(!args[1]){
                     let helpvar = 0;
-                    bot.commands.get('Help').execute(message, config, args, helpvar, moment);
+                    bot.commands.get('Help').execute(message, args, helpvar, moment);
                 }else{
-                    return;
+                    const err3 = new RichEmbed()
+                        .setTitle("Error #3")
+                        .setColor(config.Errorembedcolor)
+                        .addField("This help section dosen't exist", "To see more info about help sections simply input help.")
+                    message.channel.send(err3);
                 }
                 break;
 
 
             //command 2
             case "ban":
-                bot.commands.get('Test2').execute(message, config, args, moment);
-                console.log("Command ban ||" + Date.now())
+                //totally made by stiff
+                bot.commands.get('Ban').execute(message, args);
+                console.log("deez nuts");
                 break;
 
+                //command 3
+            case "kick":
+
+                break;
         }
     }});
 

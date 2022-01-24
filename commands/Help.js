@@ -1,8 +1,9 @@
 const {RichEmbed} = require("discord.js.old");
+const config = require("../Config.json")
 module.exports = {
     name: 'Help',
     description: "Displays help",
-    execute(message, config, args, helpvar, moment){
+    execute(message, args, helpvar, moment){
         //command start lmao
         const Help = new RichEmbed()
             .setColor(config.Embedcolor)
@@ -11,7 +12,7 @@ module.exports = {
             .setDescription('There are various help pages for every bot function')
             .addField(',Help moderation', 'Display help in moderation commands')
             .addField(',help Misc', 'Will display help in misc commands for fun')
-            .setFooter({ text: config.FooterText , iconURL: config.FooterImages });
+            .setFooter({ text: config.FooterText, iconURL: config.FooterImages });
 
         const Helpmoderation = new RichEmbed()
             .setColor(config.Embedcolor)
@@ -21,7 +22,7 @@ module.exports = {
             .addField(',ban "ping" "time"', 'bans someone for a period of time "infinite time if empty"')
             .addField(',mute "ping" "time"', 'mutes someone for a period of time "infinite time if empty"')
             .addField(',kick "ping"', 'Kicks specified user')
-            .setFooter({ text: config.FooterText , iconURL: config.FooterImages });
+            .setFooter({ text: config.FooterText , iconURL: config.FooterImages  });
 
         const Helpmisc = new RichEmbed()
             .setColor(config.Embedcolor)

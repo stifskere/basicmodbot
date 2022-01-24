@@ -1,7 +1,8 @@
 {
   "Token": "OTIwMzY5MzA5NTE0MDk2Njgw.YbjWtw.3L1esxbpz46MfNg_LyXyPddf9Bk",
   "Prefix": "-",
-  "Embedcolor": "#0099ff",
+  "Embedcolor": "#00c3ff",
+  "Errorembedcolor": "#FF0000",
   "FooterImages": "https://play-lh.googleusercontent.com/8ddL1kuoNUB5vUvgDVjYY3_6HwQcrg1K2fd_R8soD-e2QYj8fT9cfhfh3G0hnSruLKec",
   "FooterText": "Footer text here"
 }
