@@ -21,6 +21,5 @@ module.exports = {
         if(!member.bannable) return message.channel.send(err2);
         let reason = args.slice(2).join(' ');
         member.ban(reason);
-        //Here is meant to go the whole code for banning someone but it dosen't work for some reason
     }
 }
