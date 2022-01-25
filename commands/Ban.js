@@ -1,14 +1,7 @@
-const Discord = require('discord.js.old');
-const bot = new Discord.Client();
-const config = require("../Config.json")
-const moment = require('moment');
-const PREFIX = "-";
-const { RichEmbed } = require('discord.js.old');
-const date = new Date();
 module.exports = {
     name: 'Ban',
     description: "says ping!",
-    execute(message, args) {
+    execute(message, args, config, moment, RichEmbed, date) {
         let member = message.mentions.members.first();
         const err1 = new RichEmbed()
             .setTitle("Error #1")
@@ -21,7 +14,14 @@ module.exports = {
         if(!member) return message.channel.send(err1);
         if(!member.bannable) return message.channel.send(err2);
         let reason = args.slice(2).join(' ');
+        const banembed = new RichEmbed()
+            .setTitle(`${member.displayname} was banned`)
+            .setColor(config.Embedcolor)
+            .addField(`User: ${member.displayName} with id ${member.id}`, `**was banned for the Reason:** ${reason}`)
+            .setTimestamp()
+        message.channel.send(banembed);
         member.ban(reason);
-        console.log("Command Ban || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Member banned: ${member}`);
+        console.log("Command Ban || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Member banned: ${member.displayName} with id: ${member.id}`);
+        console.log(`For the reason: ${reason}\n `);
     }
 }

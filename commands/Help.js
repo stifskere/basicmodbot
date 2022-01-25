@@ -1,10 +1,7 @@
-const {RichEmbed} = require("discord.js.old");
-const config = require("../Config.json");
-const date = new Date();
 module.exports = {
     name: 'Help',
     description: "Displays help",
-    execute(message, args, helpvar, moment){
+    execute(message, args, config, moment, RichEmbed, date, helpvar){
         //command start lmao
         const Help = new RichEmbed()
             .setColor(config.Embedcolor)
