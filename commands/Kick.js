@@ -1,23 +1,23 @@
 module.exports = {
     name: 'Kick',
-    description: "Displays help",
-    execute(message, args, config, moment, RichEmbed, date){
+    description: "Kicks mentioned user",
+    execute(message, args, config, moment, RichEmbed, date, embeds){
         let member = message.mentions.members.first();
-        const err1 = new RichEmbed()
-            .setTitle("Error #1")
-            .setColor(config.Errorembedcolor)
-            .addField("Mention a valid member", "You must mention by a ping a member inside this server")
-        const err5 = new RichEmbed()
-            .setTitle("Error #5")
-            .setColor(config.Errorembedcolor)
-            .addField("User can't be kicked", "This user can't be kicked because of server permissions")
-        if(!member) return message.channel.send(err1);
-        if(!member.kickable) return message.channel.send(err2);
+        if(!member) {
+            message.channel.send(err1);
+            console.log("Command Kick || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Error 1\n `)
+            return;
+        }
+        if(!member.kickable){
+            message.channel.send(err4);
+            console.log("Command Kick || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Error 4\n `)
+            return;
+        }
         let reason = args.slice(2).join(' ');
         const kickembed = new RichEmbed()
-            .setTitle(`${member.displayname} was banned`)
+            .setTitle(`Kick successful`)
             .setColor(config.Embedcolor)
-            .addField(`User: ${member.displayName} with id ${member.id}`, `**was kicked for the Reason:** ${reason}`)
+            .addField(`User ${member.displayName} with id ${member.id}`, `**was kicked for the Reason:** ${reason}`)
             .setTimestamp()
         message.channel.send(kickembed);
         member.kick(reason);

@@ -1,26 +1,31 @@
 module.exports = {
     name: 'Ban',
-    description: "says ping!",
-    execute(message, args, config, moment, RichEmbed, date) {
+    description: "Bans mentioned user",
+    execute(message, args, config, moment, RichEmbed, date, embeds, db, insertban) {
         let member = message.mentions.members.first();
-        const err1 = new RichEmbed()
-            .setTitle("Error #1")
-            .setColor(config.Errorembedcolor)
-            .addField("Mention a valid member", "You must mention by a ping a member inside this server")
-        const err2 = new RichEmbed()
-            .setTitle("Error #2")
-            .setColor(config.Errorembedcolor)
-            .addField("User can't be banned", "This user can't be banned because of server permissions")
-        if(!member) return message.channel.send(err1);
-        if(!member.bannable) return message.channel.send(err2);
+        if(!member) {
+            message.channel.send(err1);
+            console.log("Command Ban || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Error 1\n `)
+            return;
+        }
+        if(!member.bannable) {
+            message.channel.send(err2);
+            console.log("Command Ban || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Error 2\n `)
+            return;
+        }
         let reason = args.slice(2).join(' ');
+        if(!reason){
+            reason = "no reason provided"
+        }
         const banembed = new RichEmbed()
-            .setTitle(`${member.displayname} was banned`)
+            .setTitle(`ban successful`)
             .setColor(config.Embedcolor)
-            .addField(`User: ${member.displayName} with id ${member.id}`, `**was banned for the Reason:** ${reason}`)
+            .addField(`User ${member.displayName} with id: ${member.id}`, `**was banned for the Reason:** ${reason}`)
             .setTimestamp()
         message.channel.send(banembed);
         member.ban(reason);
+        var memberid = member.id;
+        insertban.run(`${memberid}`, `${reason}`)
         console.log("Command Ban || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Member banned: ${member.displayName} with id: ${member.id}`);
         console.log(`For the reason: ${reason}\n `);
     }

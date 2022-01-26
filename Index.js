@@ -1,4 +1,5 @@
 const Discord = require('discord.js.old');
+const intents = ["GUILDS", "GUILD_MEMBERS"];
 const sqlite = require('sqlite3').verbose();
 const bot = new Discord.Client();
 const config = require("./Config.json")
@@ -7,6 +8,7 @@ const token = config.Token;
 const PREFIX = "-";
 const { RichEmbed } = require('discord.js.old');
 const date = new Date;
+const embeds = require('./Embeds.js')
 
 const fs = require('fs');
 const {GuildMember} = require("discord.js.old");
@@ -23,8 +25,13 @@ bot.on('ready', () => {
     console.log(`Active as ${bot.user.tag}`);
 });
 
-bot.on(GuildMember.add, member => {
-    bot.channel.get('931147953454862408').send(member + " Welcome!");
+bot.on("guildMemberAdd", (member) =>{
+   const userwelcomeembed = new RichEmbed()
+       .setTitle("New member joined")
+       .addField(`${member}`, `joined the server`)
+       .setTimestamp()
+    const userwelcomechannelget = guild.channels.find(channel => channel.name.includes("general" || "lounge" || "chat"));
+   bot.channels.get(userwelcomechannelget.id).send(userwelcomeembed);
 });
 
 bot.on('message', message => {
@@ -32,56 +39,63 @@ bot.on('message', message => {
     if(msg.startsWith(config.Prefix)){
         let args = msg.substring(PREFIX.length).split(" ");
 
+        let db  = new sqlite.Database(`./Databases/${message.guild.id}.db` , sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE)
+        db.run(`CREATE TABLE IF NOT EXISTS bannedusers(UserID INTEGER NOT NULL, reason TEXT NOT NULL)`)
+        db.run(`CREATE TABLE IF NOT EXISTS warnedusers(UserID INTEGER NOT NULL, reason TEXT NOT NULL)`)
+        db.run(`CREATE TABLE IF NOT EXISTS kickedusers(UserID INTEGER NOT NULL, reason TEXT NOT NULL)`)
 
+        const insertban = db.prepare(`INSERT INTO bannedusers VALUES (?,?)`)
+        const insertwarn = db.prepare(`INSERT INTO warnedusers VALUES (?,?)`)
+        const insertkick = db.prepare(`INSERT INTO kickedusers VALUES (?,?)`)
 
         switch (args[0]) {
             //commands
+
                 //command 1
             case "help":
                 if(args[1] === "moderation"){
                     let helpvar = 1;
-                    bot.commands.get('Help').execute(message, args, config, moment, RichEmbed, date, helpvar);
+                    bot.commands.get('Help').execute(message, args, config, moment, RichEmbed, date, helpvar, embeds);
                     return;
                 }else if(args[1] === "misc"){
                     let helpvar = 2;
-                    bot.commands.get('Help').execute(message, args, config, moment, RichEmbed, date, helpvar);
+                    bot.commands.get('Help').execute(message, args, config, moment, RichEmbed, date, helpvar, embeds);
                     return;
                 }else if(!args[1]){
                     let helpvar = 0;
-                    bot.commands.get('Help').execute(message, args, config, moment, RichEmbed, date, helpvar);
+                    bot.commands.get('Help').execute(message, args, config, moment, RichEmbed, date, helpvar, embeds);
                 }else{
                     let helpvar = 4;
-                    bot.commands.get('Help').execute(message, args, config, moment, RichEmbed, date, helpvar);
+                    bot.commands.get('Help').execute(message, args, config, moment, RichEmbed, date, helpvar, embeds);
                 }
                 break;
 
-
-            //command 2
+                //command 2
             case "ban":
-                bot.commands.get('Ban').execute(message, args, config, moment, RichEmbed, date);
+                bot.commands.get('Ban').execute(message, args, config, moment, RichEmbed, date, embeds, db, insertban);
                 break;
 
                 //command 3
             case "kick":
-                bot.commands.get('Kick').execute(message, args, config, moment, RichEmbed, date);
+                bot.commands.get('Kick').execute(message, args, config, moment, RichEmbed, date, embeds, db, insertkick);
+                break;
+
+                //command 4
+            case "unban":
+                bot.commands.get('unban').execute(message, args, config, moment, RichEmbed, date, embeds, bot);
+                break;
+
+            case "unkick":
+                const unkick = new RichEmbed()
+                    .setTitle('unkick')
+                    .setColor(config.Embedcolor)
+                    .addField("Why don't you", "unkick deez nuts?")
+                    message.channel.send(unkick);
                 break;
         }
     }});
 
 bot.on('guildCreate', guild => {
     const wlcmessage = guild.channels.find(channel => channel.name.includes("general" || "lounge" || "chat"));
-    const wlcmessageID = wlcmessage.id;
-    const wlc = new RichEmbed()
-        .setColor('#0099ff')
-        .setTitle('Thanks for adding this bot')
-        .setDescription("If you see this, it means you were able\n to make your bot work, further configuration is required")
-        .addField("How do i configure my bot?", "Go to 'Configuration.html' in your bot files and\n you will be able to modify your bot configuration with an intuitive UI")
-        .setImage('https://media.discordapp.net/attachments/858068843570003998/934108621619474442/20220118_034829.gif')
-        .setFooter("Bot coded by: Mewa#6969","https://cdn.discordapp.com/attachments/931147953454862408/934271205060526120/Sin_titulo-2.png")
-
-    bot.channels.get(wlcmessageID).send(wlc);
-});
-
-
-
-bot.login(token);
+    bot.channels.get(wlcmessage.id).send(wlc);
+}); bot.login(token);

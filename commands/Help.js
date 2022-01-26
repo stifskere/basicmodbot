@@ -1,39 +1,34 @@
 module.exports = {
     name: 'Help',
     description: "Displays help",
-    execute(message, args, config, moment, RichEmbed, date, helpvar){
+    execute(message, args, config, moment, RichEmbed, date, helpvar, embeds){
         //command start lmao
         const Help = new RichEmbed()
             .setColor(config.Embedcolor)
             .setTitle('Help')
-            .addField(',Help', 'Will show this message')
+            .addField('-Help', 'Will show this message')
             .setDescription('There are various help pages for every bot function')
-            .addField(',Help moderation', 'Display help in moderation commands')
-            .addField(',help Misc', 'Will display help in misc commands for fun')
+            .addField('-Help moderation', 'Display help in moderation commands')
+            .addField('-help Misc', 'Will display help in misc commands for fun')
             .setFooter({ text: config.FooterText, iconURL: config.FooterImages });
 
         const Helpmoderation = new RichEmbed()
             .setColor(config.Embedcolor)
             .setTitle('Moderation commands')
-            .addField(',Help', 'Will show this message')
-            .setDescription('There are various help pages for every bot function')
-            .addField(',ban "ping" "time"', 'bans someone for a period of time "infinite time if empty"')
-            .addField(',mute "ping" "time"', 'mutes someone for a period of time "infinite time if empty"')
-            .addField(',kick "ping"', 'Kicks specified user')
+            .setDescription('There are a few useful moderation commands')
+            .addField('-ban "ping" "time" "reason"', 'bans someone for a period of time "infinite time if empty"')
+            .addField('-unban "user id" "reason"', 'Unbans the specified user')
+            .addField('-mute "ping" "time" "reason"', 'mutes someone for a period of time "infinite time if empty"')
+            .addField('-kick "ping" "reason"', 'Kicks specified user')
             .setFooter({ text: config.FooterText , iconURL: config.FooterImages  });
 
         const Helpmisc = new RichEmbed()
             .setColor(config.Embedcolor)
             .setTitle('Misc commands')
             .setDescription('There are a few misc commands, most of them about levels')
-            .addField(',level "user"', 'if empty it will return self level value')
-            .addField(',leaderboard', 'Will display a leaderboard with the 3 persons who most talked')
+            .addField('-level "user"', 'if empty it will return self level value')
+            .addField('-leaderboard', 'Will display a leaderboard with the 3 persons who most talked')
             .setFooter({ text: config.FooterText , iconURL: config.FooterImages });
-
-        const err3 = new RichEmbed()
-            .setTitle("Error #3")
-            .setColor(config.Errorembedcolor)
-            .addField("This help section dosen't exist", "To see more info about help sections simply input help.")
 
             if(helpvar === 1){
                 message.channel.send(Helpmoderation)
@@ -43,11 +38,11 @@ module.exports = {
                 message.channel.send(Help)
             }else if(helpvar >= 4){
                 message.channel.send(err3);
-                console.log("Command Help || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Error 3`)
+                console.log("Command Help || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Error 3\n `)
+                return;
             }
 
-
-            console.log("Command Help || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || variabletype ${helpvar}`)
+            console.log("Command Help || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || variabletype ${helpvar}\n `)
 
     }
 }
