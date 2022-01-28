@@ -43,7 +43,7 @@ bot.on('message', message => {
         db.run(`CREATE TABLE IF NOT EXISTS casestable(UserID INTEGER NOT NULL, reason TEXT NOT NULL, type TEXT NOT NULL)`)
 
         const insertcases = db.prepare(`INSERT INTO casestable VALUES (?,?,?)`)
-        const casesquerry = `SELECT * FROM casestable WHERE UserID`;
+        const casesquerry = `SELECT * FROM casestable WHERE UserID = ?`;
 
         switch (args[0]) {
             //commands
