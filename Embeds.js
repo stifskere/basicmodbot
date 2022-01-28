@@ -33,7 +33,7 @@ module.exports = {
     const: err5 = new RichEmbed()
         .setTitle("Error")
         .setColor(config.Errorembedcolor)
-        .addField("User can't be unbanned", "This user can't be unbanned since it was not in the banned users list"),
+        .addField("Specify a user", "No user specified in the server "),
 
     const: err6 = new RichEmbed()
         .setTitle("Error")

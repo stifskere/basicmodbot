@@ -1,6 +1,7 @@
 module.exports = {
     name: 'Ban',
     execute(message, args, config, moment, RichEmbed, date, embeds, db, insertcases) {
+
         let member = message.mentions.members.first();
         if(!member) {
             message.channel.send(err1);
@@ -24,7 +25,7 @@ module.exports = {
         message.channel.send(banembed);
         member.ban(reason);
         var memberid = member.id;
-        insertcases.run(`${memberid}`, `${reason}`, `ban`)
+        insertcases.run(`${memberid}`, `${reason}`, `ban`, `${moderator}`)
         console.log("Command Ban || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Member banned: ${member.displayName} with id: ${member.id}`);
         console.log(`For the reason: ${reason}\n `);
     }

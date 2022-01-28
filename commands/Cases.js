@@ -3,16 +3,20 @@ module.exports = {
     execute(message, args, config, moment, RichEmbed, date, embeds, bot, db, casesquerry){
         let amount = 1;
         let member = message.mentions.users.first();
-        let mentionmember = message.mentions.users.first();
         
         if(!member){
-            message.channel.send("Specify a user");
+            message.channel.send(err5);
         }
-        member = member.toString().replace(/[\\<>@#&!']/g, "")
+        try{
+            member = member.toString().replace(/[\\<>@#&!']/g, "")
+        }catch (err){
+            return;
+        }
+
 
         const CasesEmbedRows = new RichEmbed()
             .setTitle(`Cases from:                 ‎‎`)
-            .setDescription(`${mentionmember}`)
+            .setDescription(`${message.mentions.users.first().tag}`)
             .setColor(config.Embedcolor)
             .setTimestamp()
 
@@ -22,8 +26,9 @@ module.exports = {
             row.forEach( function (rows){
                 let reason = rows.reason
                 let type = rows.type
+                let moderator = rows.moderator
 
-                CasesEmbedRows.addField(`${type}`, `Reason: ${reason}`)
+                CasesEmbedRows.addField(`${type}`, `Reason: ${reason}\n Moderator: ${moderator}`)
                 amount++
 
             })

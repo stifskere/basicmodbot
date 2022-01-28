@@ -9,7 +9,6 @@ const PREFIX = "-";
 const { RichEmbed } = require('discord.js.old');
 const date = new Date;
 const embeds = require('./Embeds.js')
-
 const fs = require('fs');
 const {GuildMember} = require("discord.js.old");
 bot.commands = new Discord.Collection();
@@ -39,12 +38,11 @@ bot.on('message', message => {
     if(msg.startsWith(config.Prefix)){
         let args = msg.substring(PREFIX.length).split(" ");
 
-        let db  = new sqlite.Database(`./Databases/${message.guild.id}.db` , sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE)
-        db.run(`CREATE TABLE IF NOT EXISTS casestable(UserID INTEGER NOT NULL, reason TEXT NOT NULL, type TEXT NOT NULL)`)
-
-        const insertcases = db.prepare(`INSERT INTO casestable VALUES (?,?,?)`)
+        let db = new sqlite.Database(`./Databases/${message.guild.id}.db`, sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE)
+        db.run(`CREATE TABLE IF NOT EXISTS casestable(UserID INTEGER NOT NULL, reason TEXT NOT NULL, type TEXT NOT NULL, moderator TEXT NOT NULL)`)
+        const insertcases = db.prepare(`INSERT INTO casestable VALUES (?,?,?,?)`)
         const casesquerry = `SELECT * FROM casestable WHERE UserID = ?`;
-
+try{
         switch (args[0]) {
             //commands
 
@@ -93,7 +91,20 @@ bot.on('message', message => {
             case "cases":
                 bot.commands.get('cases').execute(message, args, config, moment, RichEmbed, date, embeds, bot, db, casesquerry)
                 break;
-        }
+
+                //command 7
+            case "warn":
+                bot.commands.get('warn').execute(message, args, config, moment, RichEmbed, date, embeds, bot, db, insertcases)
+                break;
+        }}catch (err){
+    const setupembed = new RichEmbed()
+        .setTitle("Bot setup")
+        .setDescription("This is the first time that the bot runs on this server\n bot restarting, please wait")
+    message.channel.send(setupembed)
+    bot.destroy()
+    bot.login(token);
+    return;
+}
     }});
 
 bot.on('guildCreate', guild => {
