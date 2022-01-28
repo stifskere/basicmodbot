@@ -40,13 +40,10 @@ bot.on('message', message => {
         let args = msg.substring(PREFIX.length).split(" ");
 
         let db  = new sqlite.Database(`./Databases/${message.guild.id}.db` , sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE)
-        db.run(`CREATE TABLE IF NOT EXISTS bannedusers(UserID INTEGER NOT NULL, reason TEXT NOT NULL)`)
-        db.run(`CREATE TABLE IF NOT EXISTS warnedusers(UserID INTEGER NOT NULL, reason TEXT NOT NULL)`)
-        db.run(`CREATE TABLE IF NOT EXISTS kickedusers(UserID INTEGER NOT NULL, reason TEXT NOT NULL)`)
+        db.run(`CREATE TABLE IF NOT EXISTS casestable(UserID INTEGER NOT NULL, reason TEXT NOT NULL, type TEXT NOT NULL)`)
 
-        const insertban = db.prepare(`INSERT INTO bannedusers VALUES (?,?)`)
-        const insertwarn = db.prepare(`INSERT INTO warnedusers VALUES (?,?)`)
-        const insertkick = db.prepare(`INSERT INTO kickedusers VALUES (?,?)`)
+        const insertcases = db.prepare(`INSERT INTO casestable VALUES (?,?,?)`)
+        const casesquerry = `SELECT * FROM casestable WHERE UserID`;
 
         switch (args[0]) {
             //commands
@@ -72,25 +69,29 @@ bot.on('message', message => {
 
                 //command 2
             case "ban":
-                bot.commands.get('Ban').execute(message, args, config, moment, RichEmbed, date, embeds, db, insertban);
+                bot.commands.get('Ban').execute(message, args, config, moment, RichEmbed, date, embeds, db, insertcases);
                 break;
 
                 //command 3
             case "kick":
-                bot.commands.get('Kick').execute(message, args, config, moment, RichEmbed, date, embeds, db, insertkick);
+                bot.commands.get('Kick').execute(message, args, config, moment, RichEmbed, date, embeds, db, insertcases);
                 break;
 
                 //command 4
             case "unban":
                 bot.commands.get('unban').execute(message, args, config, moment, RichEmbed, date, embeds, bot);
                 break;
-
+                //command 5
             case "unkick":
                 const unkick = new RichEmbed()
                     .setTitle('unkick')
                     .setColor(config.Embedcolor)
                     .addField("Why don't you", "unkick deez nuts?")
                     message.channel.send(unkick);
+                break;
+                //command 6
+            case "cases":
+                bot.commands.get('cases').execute(message, args, config, moment, RichEmbed, date, embeds, bot, db, casesquerry)
                 break;
         }
     }});

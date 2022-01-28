@@ -1,6 +1,5 @@
 module.exports = {
     name: 'unban',
-    description: "Unbans mentioned user",
     async execute(message, args, config, moment, RichEmbed, date, embeds, bot) {
         let member = message.content.split(" ")[1]
 

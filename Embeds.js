@@ -11,32 +11,37 @@ module.exports = {
         .setFooter("Bot coded by: Mewa#6969","https://cdn.discordapp.com/attachments/931147953454862408/934271205060526120/Sin_titulo-2.png"),
 
     const: err1 = new RichEmbed()
-        .setTitle("Error #1")
+        .setTitle("Error")
         .setColor(config.Errorembedcolor)
         .addField("Mention a valid member", "You must mention by a ping a member inside this server"),
 
     const: err2 = new RichEmbed()
-        .setTitle("Error #2")
+        .setTitle("Error")
         .setColor(config.Errorembedcolor)
         .addField("User can't be banned", "This user can't be banned because of server permissions"),
 
     const: err3 = new RichEmbed()
-        .setTitle("Error #3")
+        .setTitle("Error")
         .setColor(config.Errorembedcolor)
         .addField("This help section dosen't exist", "To see more info about help sections simply input help."),
 
     const: err4 = new RichEmbed()
-        .setTitle("Error #4")
+        .setTitle("Error")
         .setColor(config.Errorembedcolor)
         .addField("User can't be kicked", "This user can't be kicked because of server permissions"),
 
     const: err5 = new RichEmbed()
-        .setTitle("Error #5")
+        .setTitle("Error")
         .setColor(config.Errorembedcolor)
         .addField("User can't be unbanned", "This user can't be unbanned since it was not in the banned users list"),
 
     const: err6 = new RichEmbed()
-        .setTitle("Error #6")
+        .setTitle("Error")
         .setColor(config.Errorembedcolor)
-        .addField("User can't be unbanned","This user can't be unbanned because of server permissions")
+        .addField("User can't be unbanned","This user can't be unbanned because of server permissions"),
+
+    const: err7 = new RichEmbed()
+        .setTitle("Error")
+        .setColor(config.Errorembedcolor)
+        .addField("Error gathering on data", "There was an error on reading cases database for the user")
 }

@@ -1,7 +1,6 @@
 module.exports = {
     name: 'Kick',
-    description: "Kicks mentioned user",
-    execute(message, args, config, moment, RichEmbed, date, embeds){
+    execute(message, args, config, moment, RichEmbed, date, embeds, db, insertcases){
         let member = message.mentions.members.first();
         if(!member) {
             message.channel.send(err1);
@@ -21,6 +20,8 @@ module.exports = {
             .setTimestamp()
         message.channel.send(kickembed);
         member.kick(reason);
+        var memberid = member.id;
+        insertcases.run(`${memberid}`, `${reason}`, `kick`)
         console.log("Command Kick || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Member Kicked: ${member.displayName} with id ${member.id}`);
         console.log(`For the reason: ${reason}\n `);
     }

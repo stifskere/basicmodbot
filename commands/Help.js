@@ -1,6 +1,5 @@
 module.exports = {
     name: 'Help',
-    description: "Displays help",
     execute(message, args, config, moment, RichEmbed, date, helpvar, embeds){
         //command start lmao
         const Help = new RichEmbed()
