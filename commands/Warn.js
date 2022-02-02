@@ -1,6 +1,12 @@
 module.exports = {
     name: 'warn',
-    execute(message, args, config, moment, RichEmbed, date, embeds, bot, db, insertcases) {
+    execute(message, args, config, moment, RichEmbed, date, embeds, bot, db) {
+
+        if(!message.member.roles.has('929069119763021875')){
+            message.channel.send(err2);
+            return;
+        }
+
         let member = message.mentions.members.first();
         let moderator = message.author.tag;
         if(!member) {
@@ -8,6 +14,7 @@ module.exports = {
             console.log("Command Warn || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Error 1\n `)
             return;
         }
+
         let reason = args.slice(2).join(' ');
         if(!reason){
             reason = "no reason provided";
@@ -18,9 +25,20 @@ module.exports = {
             .addField(`User ${member.displayName} with id ${member.id}`, `**Was warned for the Reason:** ${reason}`)
             .setTimestamp()
         message.channel.send(Warnembed);
+
         var memberid = member.id;
-        insertcases.run(`${memberid}`, `${reason}`, `Warn`, `${moderator}`)
-        console.log("Command Warn || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Member Kicked: ${member.displayName} with id ${member.id}`);
+        db.get(`SELECT * FROM casestable WHERE UserID = ?`, [memberid], (err, row) => {
+            if(err){console.log(err7); return;}
+            if(row === undefined){
+                db.run(`INSERT INTO casestable VALUES(?,?,?,?,?)`,[memberid, reason, 'kick', moderator, member.displayName])
+            }
+
+            else {
+                db.run(`INSERT INTO casestable VALUES(?,?,?,?,?)`,[memberid, reason, 'kick', moderator, member.displayName])
+            }
+        })
+
+        console.log("Command Warn || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Member warned: ${member.displayName} with id ${member.id}`);
         console.log(`For the reason: ${reason}\n `);
     }
 }

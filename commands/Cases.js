@@ -1,37 +1,41 @@
 module.exports = {
     name: 'cases',
-    execute(message, args, config, moment, RichEmbed, date, embeds, bot, db, casesquerry){
-        let amount = 1;
-        let member = message.mentions.users.first();
-        
-        if(!member){
-            message.channel.send(err5);
-        }
-        try{
-            member = member.toString().replace(/[\\<>@#&!']/g, "")
-        }catch (err){
+    execute(message, msg, args, config, moment, RichEmbed, date, embeds, bot, db){
+
+        if(!message.member.roles.has('929069119763021875')){
+            message.channel.send(err2);
             return;
         }
 
+        let amount = 1;
+        let member =  args.slice(1).join(' ');
+        
+        if(!member){
+            message.channel.send(err5);
+            return;
+        }
+
+        member = member.toString().replace(/[\\<>@#&!']/g, "")
+
+        let membername
 
         const CasesEmbedRows = new RichEmbed()
             .setTitle(`Cases from:                 ‎‎`)
-            .setDescription(`${message.mentions.users.first().tag}`)
             .setColor(config.Embedcolor)
             .setTimestamp()
 
-        db.all(casesquerry, [member], (err, row) =>{
-            if(err){console.log(err);message.channel.send(err7); return;}
+            db.all(`SELECT * FROM casestable WHERE UserID = ?`, [member], (err, row) =>{
+                if(err){console.log(err);message.channel.send(err7); return;}
+                row.forEach( function (rows){
+                    let reason = rows.reason
+                    let type = rows.type
+                    let moderator = rows.moderator
+                    let membername = rows.usertag
 
-            row.forEach( function (rows){
-                let reason = rows.reason
-                let type = rows.type
-                let moderator = rows.moderator
-
-                CasesEmbedRows.addField(`${type}`, `Reason: ${reason}\n Moderator: ${moderator}`)
-                amount++
-
-            })
+                    CasesEmbedRows.setDescription(`**${membername}**`)
+                    CasesEmbedRows.addField(`${type}`, `reason: ${reason}\n **Moderator:** ${moderator} `)
+                    amount++
+                })
 
             message.channel.send(CasesEmbedRows)
 

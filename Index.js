@@ -1,5 +1,4 @@
 const Discord = require('discord.js.old');
-const intents = ["GUILDS", "GUILD_MEMBERS"];
 const sqlite = require('sqlite3').verbose();
 const bot = new Discord.Client();
 const config = require("./Config.json")
@@ -10,18 +9,22 @@ const { RichEmbed } = require('discord.js.old');
 const date = new Date;
 const embeds = require('./Embeds.js')
 const fs = require('fs');
-const {GuildMember} = require("discord.js.old");
+const path = require('path');
 bot.commands = new Discord.Collection();
 
-const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+var commandsfolder = path.resolve(`commands`)
+var databasesfolder = path.resolve(`Databases`)
+
+const commandFiles = fs.readdirSync(commandsfolder).filter(file => file.endsWith('.js'));
 for(const file of commandFiles){
-    const command = require(`./commands/${file}`);
+    const command = require(path.join(commandsfolder, file));
 
     bot.commands.set(command.name, command);
 }
 
 bot.on('ready', () => {
     console.log(`Active as ${bot.user.tag}`);
+   bot.user.setActivity("Server test run")
 });
 
 bot.on("guildMemberAdd", (member) =>{
@@ -38,10 +41,11 @@ bot.on('message', message => {
     if(msg.startsWith(config.Prefix)){
         let args = msg.substring(PREFIX.length).split(" ");
 
-        let db = new sqlite.Database(`./Databases/${message.guild.id}.db`, sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE)
-        db.run(`CREATE TABLE IF NOT EXISTS casestable(UserID INTEGER NOT NULL, reason TEXT NOT NULL, type TEXT NOT NULL, moderator TEXT NOT NULL)`)
-        const insertcases = db.prepare(`INSERT INTO casestable VALUES (?,?,?,?)`)
-        const casesquerry = `SELECT * FROM casestable WHERE UserID = ?`;
+        let db = new sqlite.Database(path.join(databasesfolder, `${message.guild.id}.db`), sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE)
+        db.run(`CREATE TABLE IF NOT EXISTS casestable(UserID INTEGER NOT NULL, reason TEXT NOT NULL, type TEXT NOT NULL, moderator TEXT NOT NULL, usertag TEXT NOT NULL)`)
+        db.run(`CREATE TABLE IF NOT EXISTS levelstable(UserID INTEGER NOT NULL, messages INTEGER NOT NULL, level INTEGER NOT NULL)`)
+        db.run(`CREATE TABLE IF NOT EXISTS datatable(type TEXT NOT NULL, bool INTEGER NOT NULL)`)
+
 try{
         switch (args[0]) {
             //commands
@@ -58,6 +62,7 @@ try{
                     return;
                 }else if(!args[1]){
                     let helpvar = 0;
+                    
                     bot.commands.get('Help').execute(message, args, config, moment, RichEmbed, date, helpvar, embeds);
                 }else{
                     let helpvar = 4;
@@ -67,12 +72,12 @@ try{
 
                 //command 2
             case "ban":
-                bot.commands.get('Ban').execute(message, args, config, moment, RichEmbed, date, embeds, db, insertcases);
+                bot.commands.get('Ban').execute(message, args, config, moment, RichEmbed, date, embeds, db);
                 break;
 
                 //command 3
             case "kick":
-                bot.commands.get('Kick').execute(message, args, config, moment, RichEmbed, date, embeds, db, insertcases);
+                bot.commands.get('Kick').execute(message, args, config, moment, RichEmbed, date, embeds, db);
                 break;
 
                 //command 4
@@ -89,21 +94,15 @@ try{
                 break;
                 //command 6
             case "cases":
-                bot.commands.get('cases').execute(message, args, config, moment, RichEmbed, date, embeds, bot, db, casesquerry)
+                bot.commands.get('cases').execute(message, msg, args, config, moment, RichEmbed, date, embeds, bot, db)
                 break;
 
                 //command 7
             case "warn":
-                bot.commands.get('warn').execute(message, args, config, moment, RichEmbed, date, embeds, bot, db, insertcases)
+                bot.commands.get('warn').execute(message, args, config, moment, RichEmbed, date, embeds, bot, db)
                 break;
-        }}catch (err){
-    const setupembed = new RichEmbed()
-        .setTitle("Bot setup")
-        .setDescription("This is the first time that the bot runs on this server\n bot restarting, please wait")
-    message.channel.send(setupembed)
-    bot.destroy()
-    bot.login(token);
-    return;
+        }}catch(err){
+    console.log(err);
 }
     }});
 

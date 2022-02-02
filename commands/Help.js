@@ -9,7 +9,6 @@ module.exports = {
             .setDescription('There are various help pages for every bot function')
             .addField('-Help moderation', 'Display help in moderation commands')
             .addField('-help Misc', 'Will display help in misc commands for fun')
-            .setFooter({ text: config.FooterText, iconURL: config.FooterImages });
 
         const Helpmoderation = new RichEmbed()
             .setColor(config.Embedcolor)
@@ -19,7 +18,7 @@ module.exports = {
             .addField('-unban "user id" "reason"', 'Unbans the specified user')
             .addField('-mute "ping" "time" "reason"', 'mutes someone for a period of time "infinite time if empty"')
             .addField('-kick "ping" "reason"', 'Kicks specified user')
-            .setFooter({ text: config.FooterText , iconURL: config.FooterImages  });
+            .addField('-cases "ping"', 'Shows the cases for the specified users')
 
         const Helpmisc = new RichEmbed()
             .setColor(config.Embedcolor)
@@ -27,12 +26,13 @@ module.exports = {
             .setDescription('There are a few misc commands, most of them about levels')
             .addField('-level "user"', 'if empty it will return self level value')
             .addField('-leaderboard', 'Will display a leaderboard with the 3 persons who most talked')
-            .setFooter({ text: config.FooterText , iconURL: config.FooterImages });
 
             if(helpvar === 1){
                 message.channel.send(Helpmoderation)
+                message.channel.send(":warning: the timers and the mute command isn't available right now :warning:");
             }else if(helpvar === 2){
-                message.channel.send(Helpmisc)
+                message.channel.send(Helpmisc);
+                message.channel.send(":warning: Misc commands aren't available right now :warning:");
             }else if(helpvar === 0){
                 message.channel.send(Help)
             }else if(helpvar >= 4){

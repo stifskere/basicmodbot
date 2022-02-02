@@ -26,7 +26,9 @@ Your bot first configuration is done now, but how do you invite the bot?
 > 
 > 3. Bottom the page press COPY and paste your clipboard into a new tab in your browser.
 
-Now you invited the bot. to configure it, **further instructions will be provided in the html document**
+Now you invited the bot. to configure it, change parameters in the html document
+
+It is really easy to configure, just go through each tab in the HTML document and find the desired option
 
 ### Thanks for using my bot 🤖
 
