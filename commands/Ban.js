@@ -2,6 +2,8 @@ module.exports = {
     name: 'Ban',
     execute(message, args, config, moment, RichEmbed, date, embeds, db) {
 
+        let moderator = message.author.tag;
+
         if(!message.member.roles.has('929069119763021875')){
             message.channel.send(err2);
             return;
@@ -36,11 +38,11 @@ module.exports = {
         db.get(`SELECT * FROM casestable WHERE UserID = ?`, [memberid], (err, row) => {
             if(err){console.log(err7); return;}
             if(row === undefined){
-                db.run(`INSERT INTO casestable VALUES(?,?,?,?,?)`,[memberid, reason, 'kick', moderator, member.displayName])
+                db.run(`INSERT INTO casestable VALUES(?,?,?,?,?)`,[memberid, reason, 'ban', moderator, member.displayName])
             }
 
             else {
-                db.run(`INSERT INTO casestable VALUES(?,?,?,?,?)`,[memberid, reason, 'kick', moderator, member.displayName])
+                db.run(`INSERT INTO casestable VALUES(?,?,?,?,?)`,[memberid, reason, 'ban', moderator, member.displayName])
             }
         })
 
