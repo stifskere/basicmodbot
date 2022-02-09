@@ -124,6 +124,10 @@ bot.on('message', message => {
                 case "warn":
                     bot.commands.get('warn').execute(message, args, config, moment, RichEmbed, date, embeds, bot, db)
                     break;
+
+                //command8
+                case "level":
+                    bot.commands.get('level').execute(message, args, config, moment, RichEmbed, date, embeds, bot, db)
             }
         } catch (err) {
             console.log(err);
