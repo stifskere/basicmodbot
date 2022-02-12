@@ -1,6 +1,8 @@
 {
   "Token": "YOUR TOKEN HERE",
+  "Token_prompt": "True",
   "Prefix": "-",
   "Embedcolor": "#00c3ff",
-  "Errorembedcolor": "#FF0000"
+  "Errorembedcolor": "#FF0000",
+  "Statusstring": "In development."
 }
