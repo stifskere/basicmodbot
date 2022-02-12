@@ -3,17 +3,54 @@ const sqlite = require('sqlite3').verbose();
 const bot = new Discord.Client();
 const config = require("./Config.json")
 const moment = require('moment');
-const token = config.Token;
 const PREFIX = "-";
 const { RichEmbed } = require('discord.js.old');
 const date = new Date;
 const embeds = require('./Embeds.js')
 const fs = require('fs');
 const path = require('path');
+const readline = require("readline");
 bot.commands = new Discord.Collection();
+const ac = new AbortController();
+const signal = ac.signal;
 
-var commandsfolder = path.resolve(`commands`)
-var databasesfolder = path.resolve(`Databases`)
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+if(config.Token_prompt === "True" || "true"){
+console.log("What token do you want to start with? (Leave it blank if you want to start with program configured token)")
+console.log("You can set config token or disable this question in the configuration program (disabling the question will always start with config program token)")
+rl.question("Answer: ",  {signal},(token) =>{
+
+    if(token === ""){
+        token = config.Token
+    }
+    bot.login(token);
+
+    bot.on('ready', () => {
+        console.log(`Active as ${bot.user.tag}\nbot made by Mewa#6969`);
+        bot.user.setActivity(config.Statusstring)
+
+    });
+
+})} else if(config.Token_prompt === "False" || "false") {
+
+    let token = config.Token;
+    bot.login(token);
+
+    bot.on('ready', () => {
+        console.log(`Active as ${bot.user.tag}\nbot made by Mewa#6969`);
+        bot.user.setActivity("In development")
+
+    });
+
+}
+
+
+let commandsfolder = path.resolve(`commands`)
+let databasesfolder = path.resolve(`Databases`)
 
 const commandFiles = fs.readdirSync(commandsfolder).filter(file => file.endsWith('.js'));
 for(const file of commandFiles){
@@ -21,11 +58,6 @@ for(const file of commandFiles){
 
     bot.commands.set(command.name, command);
 }
-
-bot.on('ready', () => {
-    console.log(`Active as ${bot.user.tag}`);
-   bot.user.setActivity("Server test run")
-});
 
 bot.on("guildMemberAdd", (member) =>{
    const userwelcomeembed = new RichEmbed()
@@ -44,7 +76,7 @@ bot.on('message', message => {
 
     let db = new sqlite.Database(path.join(databasesfolder, `${message.guild.id}.db`), sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE)
     db.run(`CREATE TABLE IF NOT EXISTS casestable(UserID INTEGER NOT NULL, reason TEXT NOT NULL, type TEXT NOT NULL, moderator TEXT NOT NULL, usertag TEXT NOT NULL)`)
-    db.run(`CREATE TABLE IF NOT EXISTS levelstable(UserID INTEGER NOT NULL, messages INTEGER NOT NULL, level INTEGER NOT NULL)`)
+    db.run(`CREATE TABLE IF NOT EXISTS levelstable(UserID INTEGER NOT NULL, messages INTEGER NOT NULL, level INTEGER NOT NULL, usertag TEXT NOT NULL)`)
     db.run(`CREATE TABLE IF NOT EXISTS datatable(type TEXT NOT NULL, bool INTEGER NOT NULL)`)
 
     db.get(`SELECT * FROM levelstable WHERE Userid = ?`, [message.author.id], (err, row) => {
@@ -53,12 +85,12 @@ bot.on('message', message => {
             return;
         }
         if (row === undefined) {
-            db.run(`INSERT INTO levelstable VALUES(?,?,?)`, [message.author.id, 0, 1])
+            db.run(`INSERT INTO levelstable VALUES(?,?,?,?)`, [message.author.id, 0, 1, message.author.tag])
         } else {
             const messageN = row.messages
             const levelN = row.level
             db.run(`UPDATE levelstable SET messages = ? WHERE UserID = ?`, [messageN + 1, message.author.id])
-            if (messageN == levelN * 500) {
+            if (messageN === levelN * 500) {
                 db.run(`UPDATE levelstable SET level = ? WHERE UserID = ?`, [levelN + 1, message.author.id]);
                 message.channel.send(`Congratulations you leveled up to level ${levelN + 1}`)
             }
@@ -137,4 +169,4 @@ bot.on('message', message => {
 bot.on('guildCreate', guild => {
     const wlcmessage = guild.channels.find(channel => channel.name.includes("general" || "lounge" || "chat"));
     bot.channels.get(wlcmessage.id).send(wlc);
-}); bot.login(token);
+});

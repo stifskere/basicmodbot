@@ -13,9 +13,11 @@ module.exports = {
             row.forEach( function (rows){
                 let messages = rows.messages
                 let level = rows.level
+                let usertag = rows.usertag
+
                 const levelembed = new RichEmbed()
                     .setColor(config.Embedcolor)
-                    .setTitle(``)
+                    .setTitle(`Level for ${usertag}`)
                     .addField('Mention', `<@${member.toString()}>`)
                     .setDescription(`Level: ${level} Messages: ${messages}`)
                 message.channel.send(levelembed)
