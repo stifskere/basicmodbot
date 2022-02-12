@@ -1,6 +1,8 @@
 {
-  "Token": "OTIwMzY5MzA5NTE0MDk2Njgw.YbjWtw.myYmYQdfDauAT63SjMuZe3IhXsY",
+  "Token": "YOUR TOKEN HERE",
+  "Token_prompt": "True",
   "Prefix": "-",
   "Embedcolor": "#00c3ff",
-  "Errorembedcolor": "#FF0000"
+  "Errorembedcolor": "#FF0000",
+  "Statusstring": "In development."
 }
