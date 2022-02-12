@@ -2,6 +2,7 @@
 
 
 ## Basic customizable moderation bot
+###The bot isn't done, there are some commands that aren't available and the bot may be buggy, the instructions aren't done for the current bot and those may change, only use the bot if you know what you're doing.
 
 > How to use the bot?
 >
