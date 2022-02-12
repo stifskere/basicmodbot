@@ -22,7 +22,7 @@ const rl = readline.createInterface({
 if(config.Token_prompt === "True" || "true"){
 console.log("What token do you want to start with? (Leave it blank if you want to start with program configured token)")
 console.log("You can set config token or disable this question in the configuration program (disabling the question will always start with config program token)")
-rl.question("Answer: ",  {signal},(token) =>{
+rl.question("Answer: ",  function (token){
 
     if(token === ""){
         token = config.Token
