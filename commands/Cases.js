@@ -1,8 +1,8 @@
 module.exports = {
     name: 'cases',
-    execute(message, msg, args, config, moment, RichEmbed, date, embeds, bot, db){
+    execute(message, msg, args, config, moment, MessageEmbed, date, embeds, bot, db){
 
-        if(!message.member.roles.has('929069119763021875')){
+        if(!message.member.roles.has(config.Permissionrole)){
             message.channel.send(err2);
             return;
         }
@@ -17,11 +17,10 @@ module.exports = {
 
         member = member.toString().replace(/[\\<>@#&!']/g, "")
 
-        let membername
-
-        const CasesEmbedRows = new RichEmbed()
-            .setTitle(`Cases from:                 ‎‎`)
+        const CasesEmbedRows = new MessageEmbed()
+            .setTitle(`No cases`)
             .setColor(config.Embedcolor)
+            .setDescription(`This user has no cases`)
             .setTimestamp()
 
             db.all(`SELECT * FROM casestable WHERE UserID = ?`, [member], (err, row) =>{
@@ -31,13 +30,13 @@ module.exports = {
                     let type = rows.type
                     let moderator = rows.moderator
                     let membername = rows.usertag
-
-                    CasesEmbedRows.setDescription(`**${membername}**`)
+                    CasesEmbedRows.setTitle(`Cases from:                 ‎‎`)
+                    CasesEmbedRows.setDescription(`cases for: **${membername}**`)
                     CasesEmbedRows.addField(`${type}`, `reason: ${reason}\n **Moderator:** ${moderator} `)
                     amount++
                 })
 
-            message.channel.send(CasesEmbedRows)
+            message.channel.send({embeds:[CasesEmbedRows]})
 
         })
     }

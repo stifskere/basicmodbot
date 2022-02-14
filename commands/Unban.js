@@ -1,6 +1,12 @@
 module.exports = {
     name: 'unban',
     async execute(message, args, config, moment, RichEmbed, date, embeds, bot) {
+
+        if(!message.member.roles.has(config.Permissionrole)){
+            message.channel.send(err2);
+            return;
+        }
+
         let member = message.content.split(" ")[1]
 
         if(!member){

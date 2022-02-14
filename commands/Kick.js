@@ -1,8 +1,9 @@
+const {MessageEmbed} = require("discord.js");
 module.exports = {
     name: 'Kick',
-    execute(message, args, config, moment, RichEmbed, date, embeds, db){
+    execute(message, args, config, moment, MessageEmbed, date, embeds, db){
 
-        if(!message.member.roles.has('929069119763021875')){
+        if(!message.member.roles.has(config.Permissionrole)){
             message.channel.send(err2);
             return;
         }
@@ -14,6 +15,12 @@ module.exports = {
             console.log("Command Kick || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Error 1\n `)
             return;
         }
+
+        if(member.user.bot){
+            message.channel.send(err8);
+            return;
+        }
+
         if(!member.kickable){
             message.channel.send(err2);
             console.log("Command Kick || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Error 2\n `)
@@ -25,12 +32,12 @@ module.exports = {
             reason = "no reason provided";
         }
 
-        const kickembed = new RichEmbed()
+        const kickembed = new MessageEmbed()
             .setTitle(`Kick successful`)
             .setColor(config.Embedcolor)
             .addField(`User ${member.displayName} with id ${member.id}`, `**was kicked for the Reason:** ${reason}`)
             .setTimestamp()
-        message.channel.send(kickembed);
+        message.channel.send({embeds: [kickembed]});
         member.kick(reason);
 
         var memberid = member.id;

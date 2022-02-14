@@ -2,7 +2,7 @@ module.exports = {
     name: 'warn',
     execute(message, args, config, moment, RichEmbed, date, embeds, bot, db) {
 
-        if(!message.member.roles.has('929069119763021875')){
+        if(!message.member.roles.has(config.Permissionrole)){
             message.channel.send(err2);
             return;
         }
@@ -12,6 +12,11 @@ module.exports = {
         if(!member) {
             message.channel.send(err1);
             console.log("Command Warn || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Error 1\n `)
+            return;
+        }
+
+        if(member.user.bot){
+            message.channel.send(err8);
             return;
         }
 
@@ -29,12 +34,12 @@ module.exports = {
         var memberid = member.id;
         db.get(`SELECT * FROM casestable WHERE UserID = ?`, [memberid], (err, row) => {
             if(err){console.log(err7); return;}
-            if(row === undefined){
-                db.run(`INSERT INTO casestable VALUES(?,?,?,?,?)`,[memberid, reason, 'kick', moderator, member.displayName])
-            }
+//            if(row === undefined){
+//                db.run(`INSERT INTO casestable VALUES(?,?,?,?,?)`,[memberid, reason, 'Warn', moderator, member.displayName])
+//            }
 
             else {
-                db.run(`INSERT INTO casestable VALUES(?,?,?,?,?)`,[memberid, reason, 'kick', moderator, member.displayName])
+                db.run(`INSERT INTO casestable VALUES(?,?,?,?,?)`,[memberid, reason, 'Warn', moderator, member.displayName])
             }
         })
 

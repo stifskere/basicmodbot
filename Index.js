@@ -1,18 +1,16 @@
-const Discord = require('discord.js.old');
+const Discord = require('discord.js');
 const sqlite = require('sqlite3').verbose();
-const bot = new Discord.Client();
 const config = require("./Config.json")
 const moment = require('moment');
 const PREFIX = "-";
-const { RichEmbed } = require('discord.js.old');
+const { Client, Intents, MessageEmbed, guild } = require('discord.js');
+const bot = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES ]});
 const date = new Date;
 const embeds = require('./Embeds.js')
 const fs = require('fs');
 const path = require('path');
 const readline = require("readline");
 bot.commands = new Discord.Collection();
-const ac = new AbortController();
-const signal = ac.signal;
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -22,12 +20,14 @@ const rl = readline.createInterface({
 if(config.Token_prompt === "True" || "true"){
 console.log("What token do you want to start with? (Leave it blank if you want to start with program configured token)")
 console.log("You can set config token or disable this question in the configuration program (disabling the question will always start with config program token)")
+process.stdin.isTTY = process.stdout.isTTY = true;
 rl.question("Answer: ",  function (token){
 
     if(token === ""){
         token = config.Token
     }
-    bot.login(token);
+
+    bot.login(`${token}`)
 
     bot.on('ready', () => {
         console.log(`Active as ${bot.user.tag}\nbot made by Mewa#6969`);
@@ -60,7 +60,7 @@ for(const file of commandFiles){
 }
 
 bot.on("guildMemberAdd", (member) =>{
-   const userwelcomeembed = new RichEmbed()
+   const userwelcomeembed = new MessageEmbed()
        .setTitle("New member joined")
        .addField(`${member}`, `joined the server`)
        .setTimestamp()
@@ -109,39 +109,39 @@ bot.on('message', message => {
                 case "help":
                     if (args[1] === "moderation") {
                         let helpvar = 1;
-                        bot.commands.get('Help').execute(message, args, config, moment, RichEmbed, date, helpvar, embeds);
+                        bot.commands.get('Help').execute(message, args, config, moment, MessageEmbed, date, helpvar, embeds);
                         return;
                     } else if (args[1] === "misc") {
                         let helpvar = 2;
-                        bot.commands.get('Help').execute(message, args, config, moment, RichEmbed, date, helpvar, embeds);
+                        bot.commands.get('Help').execute(message, args, config, moment, MessageEmbed, date, helpvar, embeds);
                         return;
                     } else if (!args[1]) {
                         let helpvar = 0;
 
-                        bot.commands.get('Help').execute(message, args, config, moment, RichEmbed, date, helpvar, embeds);
+                        bot.commands.get('Help').execute(message, args, config, moment, MessageEmbed, date, helpvar, embeds);
                     } else {
                         let helpvar = 4;
-                        bot.commands.get('Help').execute(message, args, config, moment, RichEmbed, date, helpvar, embeds);
+                        bot.commands.get('Help').execute(message, args, config, moment, MessageEmbed, date, helpvar, embeds);
                     }
                     break;
 
                 //command 2
                 case "ban":
-                    bot.commands.get('Ban').execute(message, args, config, moment, RichEmbed, date, embeds, db);
+                    bot.commands.get('Ban').execute(message, args, config, moment, MessageEmbed, date, embeds, db);
                     break;
 
                 //command 3
                 case "kick":
-                    bot.commands.get('Kick').execute(message, args, config, moment, RichEmbed, date, embeds, db);
+                    bot.commands.get('Kick').execute(message, args, config, moment, MessageEmbed, date, embeds, db);
                     break;
 
                 //command 4
                 case "unban":
-                    bot.commands.get('unban').execute(message, args, config, moment, RichEmbed, date, embeds, bot);
+                    bot.commands.get('unban').execute(message, args, config, moment, MessageEmbed, date, embeds, bot);
                     break;
                 //command 5
                 case "unkick":
-                    const unkick = new RichEmbed()
+                    const unkick = new MessageEmbed()
                         .setTitle('unkick')
                         .setColor(config.Embedcolor)
                         .addField("Why don't you", "unkick deez nuts?")
@@ -149,17 +149,28 @@ bot.on('message', message => {
                     break;
                 //command 6
                 case "cases":
-                    bot.commands.get('cases').execute(message, msg, args, config, moment, RichEmbed, date, embeds, bot, db)
+                    bot.commands.get('cases').execute(message, msg, args, config, moment, MessageEmbed, date, embeds, bot, db)
                     break;
 
                 //command 7
                 case "warn":
-                    bot.commands.get('warn').execute(message, args, config, moment, RichEmbed, date, embeds, bot, db)
+                    bot.commands.get('warn').execute(message, args, config, moment, MessageEmbed, date, embeds, bot, db)
                     break;
 
                 //command8
                 case "level":
-                    bot.commands.get('level').execute(message, args, config, moment, RichEmbed, date, embeds, bot, db)
+                    bot.commands.get('level').execute(message, args, config, moment, MessageEmbed, date, embeds, bot, db)
+                    break;
+
+                //command9
+                case "leaderboard":
+                    bot.commands.get('leaderboard').execute(message, args, config, moment, MessageEmbed, date, embeds, bot, db)
+                    break;
+
+                //command10
+                case "mute":
+                    bot.commands.get('mute').execute(message, guild, msg, args, config, moment, MessageEmbed, date, embeds, bot, db)
+
             }
         } catch (err) {
             console.log(err);

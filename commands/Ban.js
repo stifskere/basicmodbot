@@ -1,10 +1,11 @@
+const {MessageEmbed} = require("discord.js");
 module.exports = {
     name: 'Ban',
-    execute(message, args, config, moment, RichEmbed, date, embeds, db) {
+    execute(message, args, config, moment, MessageEmbed, date, embeds, db) {
 
         let moderator = message.author.tag;
 
-        if(!message.member.roles.has('929069119763021875')){
+        if(!message.member.roles.has(config.Permissionrole)){
             message.channel.send(err2);
             return;
         }
@@ -15,6 +16,12 @@ module.exports = {
             console.log("Command Ban || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Error 1\n `)
             return;
         }
+
+        if(member.user.bot){
+            message.channel.send(err8);
+            return;
+        }
+
         if(!member.bannable) {
             message.channel.send(err2);
             console.log("Command Ban || " + moment(date.now).format("DD/MM/YYYY hh:mm:ss") + ` || Error 2\n `)
@@ -25,16 +32,15 @@ module.exports = {
         if(!reason){
             reason = "no reason provided"
         }
-        const banembed = new RichEmbed()
+        const banembed = new MessageEmbed()
             .setTitle(`ban successful`)
             .setColor(config.Embedcolor)
             .addField(`User ${member.displayName} with id: ${member.id}`, `**was banned for the Reason:** ${reason}`)
             .setTimestamp()
-        message.channel.send(banembed);
+        message.channel.send({embeds:[banembed]});
         member.ban(reason);
 
-        //damn sql
-        var memberid = member.id;
+        let memberid = member.id;
         db.get(`SELECT * FROM casestable WHERE UserID = ?`, [memberid], (err, row) => {
             if(err){console.log(err7); return;}
             if(row === undefined){
