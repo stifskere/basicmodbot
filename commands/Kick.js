@@ -2,7 +2,7 @@ module.exports = {
     name: 'Kick',
     execute(message, args, config, moment, MessageEmbed, date, embeds, db){
 
-        if(!message.member.roles.has(config.Permissionrole)){
+        if(!message.member.roles.cache.has(config.Permissionrole)){
             message.channel.send({embeds: [err2]});
             return;
         }

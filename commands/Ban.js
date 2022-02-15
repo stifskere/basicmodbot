@@ -5,7 +5,7 @@ module.exports = {
 
         let moderator = message.author.tag;
 
-        if(!message.member.roles.has(config.Permissionrole)){
+        if(!message.member.roles.cache.has(config.Permissionrole)){
             message.channel.send({embeds: [err2]});
             return;
         }

@@ -1,12 +1,11 @@
+const discord = require('discord.js')
 module.exports = {
     name: 'cases',
     execute(message, msg, args, config, moment, MessageEmbed, date, embeds, bot, db){
 
         let member =  message.mentions.members.first();
-        console.log(message.author.roles.cache.has)
-        return;
 
-        if(!message.author.roles.cache.has(config.Permissionrole)){
+        if(!message.member.roles.cache.has(config.Permissionrole)){
             message.channel.send({embeds: [err2]});
             return;
         }
@@ -15,6 +14,11 @@ module.exports = {
         
         if(!member){
             message.channel.send({embeds: [err5]});
+            return;
+        }
+
+        if(member.user.bot) {
+            message.channel.send({embeds: [err8]});
             return;
         }
 

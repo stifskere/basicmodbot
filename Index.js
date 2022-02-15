@@ -1,15 +1,19 @@
 const Discord = require('discord.js');
 const sqlite = require('sqlite3').verbose();
-const config = require("./Config.json")
+const config = require("./Config.json");
 const moment = require('moment');
 const PREFIX = "-";
-const { Client, Intents, MessageEmbed, guild } = require('discord.js');
-const bot = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_MEMBERS ]});
+const { Client, MessageEmbed, guild, Timeout, Intents} = require('discord.js');
+const bot = new Client({ intents: new Intents(32767) });
 const date = new Date;
-const embeds = require('./Embeds.js')
+const embeds = require('./Embeds.js');
 const fs = require('fs');
 const path = require('path');
 const readline = require("readline");
+const ms = require('ms');
+const axios = require('axios');
+const canvas = require('canvas');
+const {Canvas} = require("canvas");
 bot.commands = new Discord.Collection();
 
 const rl = readline.createInterface({
@@ -51,6 +55,7 @@ rl.question("Answer: ",  function (token){
 
 let commandsfolder = path.resolve(`commands`)
 let databasesfolder = path.resolve(`Databases`)
+let Canvabase = path.resolve(`sources\\Canvasback.png`)
 
 const commandFiles = fs.readdirSync(commandsfolder).filter(file => file.endsWith('.js'));
 for(const file of commandFiles){
@@ -60,15 +65,45 @@ for(const file of commandFiles){
 }
 
 bot.on("guildMemberAdd", (member) =>{
-   const userwelcomeembed = new MessageEmbed()
-       .setTitle("New member joined")
-       .addField(`${member}`, `joined the server`)
-       .setFooter({text: `${moment(date.now).format("DD/MM/YYYY")}`})
-    const userwelcomechannelget = guild.channels.find(channel => channel.name.includes("general" || "lounge" || "chat"));
-   bot.channels.get(userwelcomechannelget.id).send(userwelcomeembed);
+
+    axios.get(`https://discord.com/api/users/${member.user.id}`, {
+        headers: {
+            Authorization: `Bot ${bot.token}`,
+        },
+    })
+        .then((res) => {
+           const { banner, accent_color } = res.data;
+
+            if(banner) {
+                const extension = banner.startsWith("a_") ? '.gif' : `'.png`;
+                const url = `https://cdn.discordapp.com/banners/${user.id}/${banner}${extension}`;
+                const userwelcomeembed = new MessageEmbed()
+                    .setTitle("New member joined")
+                    .addField(`${member.user.username}#${member.user.discriminator}`, `joined the server`, true)
+                    .setImage(url)
+                    .setFooter({text: `${moment(date.now).format("DD/MM/YYYY")}`, iconURL: `${member.user.avatarURL()}`})
+
+                bot.channels.cache.get('931147953454862408').send({embeds: [userwelcomeembed]})
+            }else{
+                const canvas = Canvas.createCanvas(700, 250);
+                const context = canvas.getContext('2d');
+                let background = Canvabase
+                context.drawImage(background, 700, 250, canvas.width, canvas.height);
+                const attachment = new Discord.MessageAttachment(canvas.toBuffer(), Canvabase);
+
+                const userwelcomeembed = new MessageEmbed()
+                    .setTitle("New member joined")
+                    .addField(`${member.user.username}#${member.user.discriminator}`, `joined the server`, true)
+                    .setImage(attachment)
+                    .setFooter({text: `${moment(date.now).format("DD/MM/YYYY")}`, iconURL: `${member.user.avatarURL()}`})
+
+                bot.channels.cache.get('931147953454862408').send({embeds: [userwelcomeembed]})
+            }
+        });
+
 });
 
-bot.on('message', message => {
+bot.on('messageCreate', message => {
 
     if (message.author.bot || message.guild === null) {
         return;
@@ -170,7 +205,7 @@ bot.on('message', message => {
 
                 //command10
                 case "mute":
-                    bot.commands.get('mute').execute(message, guild, msg, args, config, moment, MessageEmbed, date, embeds, bot, db)
+                    bot.commands.get('mute').execute(message, guild, msg, args, config, moment, MessageEmbed, date, embeds, bot, db, Timeout, ms)
 
             }
         } catch (err) {
@@ -180,5 +215,5 @@ bot.on('message', message => {
 
 bot.on('guildCreate', guild => {
     const wlcmessage = guild.channels.find(channel => channel.name.includes("general" || "lounge" || "chat"));
-    bot.channels.get(wlcmessage.id).send(wlc);
+    bot.channels.get(wlcmessage.id).send({embeds: [wlc]});
 });
