@@ -1,26 +1,27 @@
 module.exports = {
     name: "level",
-    execute(message, args, config, moment, RichEmbed, date, embeds, bot, db){
+    execute(message, args, config, moment, MessageEmbed, date, embeds, bot, db){
 
-        let user = message.content.split(" ")[1];
+        let user = message.members.members.first()
         if(!user){
             user = message.author.id;
         }
         console.log(user);
             let member = user.toString().replace(/[\\<>@#&!']/g, "")
         db.all(`SELECT * FROM levelstable WHERE UserID = ?`, [member], (err, row) =>{
-            if(err){console.log(err);message.channel.send(err7); return;}
+            if(err){console.log(err);message.channel.send({embeds: [err7]}); return;}
             row.forEach( function (rows){
                 let messages = rows.messages
                 let level = rows.level
                 let usertag = rows.usertag
 
-                const levelembed = new RichEmbed()
+                const levelembed = new MessageEmbed()
                     .setColor(config.Embedcolor)
                     .setTitle(`Level for ${usertag}`)
                     .addField('Mention', `<@${member.toString()}>`)
                     .setDescription(`Level: ${level} Messages: ${messages}`)
-                message.channel.send(levelembed)
+                    .setFooter({text: `${moment(date.now).format("DD/MM/YYYY")}`})
+                message.channel.send({embeds: [levelembed]})
             })
 
     })}

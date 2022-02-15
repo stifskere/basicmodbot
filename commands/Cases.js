@@ -2,16 +2,19 @@ module.exports = {
     name: 'cases',
     execute(message, msg, args, config, moment, MessageEmbed, date, embeds, bot, db){
 
-        if(!message.member.roles.has(config.Permissionrole)){
-            message.channel.send(err2);
+        let member =  message.mentions.members.first();
+        console.log(message.author.roles.cache.has)
+        return;
+
+        if(!message.author.roles.cache.has(config.Permissionrole)){
+            message.channel.send({embeds: [err2]});
             return;
         }
 
         let amount = 1;
-        let member =  args.slice(1).join(' ');
         
         if(!member){
-            message.channel.send(err5);
+            message.channel.send({embeds: [err5]});
             return;
         }
 
@@ -21,10 +24,10 @@ module.exports = {
             .setTitle(`No cases`)
             .setColor(config.Embedcolor)
             .setDescription(`This user has no cases`)
-            .setTimestamp()
+            .setFooter({text: `${moment(date.now).format("DD/MM/YYYY")}`})
 
             db.all(`SELECT * FROM casestable WHERE UserID = ?`, [member], (err, row) =>{
-                if(err){console.log(err);message.channel.send(err7); return;}
+                if(err){console.log(err);message.channel.send({embeds: [err7]}); return;}
                 row.forEach( function (rows){
                     let reason = rows.reason
                     let type = rows.type

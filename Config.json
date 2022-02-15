@@ -1,5 +1,5 @@
 {
-  "Token": "YOUR TOKEN HERE",
+  "Token": "Token here",
   "Token_prompt": "True",
   "Prefix": "-",
   "Embedcolor": "#00c3ff",

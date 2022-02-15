@@ -4,7 +4,7 @@ const config = require("./Config.json")
 const moment = require('moment');
 const PREFIX = "-";
 const { Client, Intents, MessageEmbed, guild } = require('discord.js');
-const bot = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES ]});
+const bot = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_MEMBERS ]});
 const date = new Date;
 const embeds = require('./Embeds.js')
 const fs = require('fs');
@@ -63,7 +63,7 @@ bot.on("guildMemberAdd", (member) =>{
    const userwelcomeembed = new MessageEmbed()
        .setTitle("New member joined")
        .addField(`${member}`, `joined the server`)
-       .setTimestamp()
+       .setFooter({text: `${moment(date.now).format("DD/MM/YYYY")}`})
     const userwelcomechannelget = guild.channels.find(channel => channel.name.includes("general" || "lounge" || "chat"));
    bot.channels.get(userwelcomechannelget.id).send(userwelcomeembed);
 });
@@ -145,6 +145,7 @@ bot.on('message', message => {
                         .setTitle('unkick')
                         .setColor(config.Embedcolor)
                         .addField("Why don't you", "unkick deez nuts?")
+                        .setFooter({text: `${moment(date.now).format("DD/MM/YYYY")}`})
                     message.channel.send(unkick);
                     break;
                 //command 6

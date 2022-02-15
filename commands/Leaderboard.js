@@ -1,12 +1,12 @@
 module.exports = {
     name: "leaderboard",
-    execute(message, args, config, moment, RichEmbed, date, embeds, bot, db){
+    execute(message, args, config, moment, MessageEmbed, date, embeds, bot, db){
         const { guild } = message
-        const leaderboardembed = new RichEmbed()
+        const leaderboardembed = new MessageEmbed()
             .setColor(config.Embedcolor)
             .setTitle(`${guild.name} leaderboard`)
             .setDescription(`This are the users with more level in ${guild.name}`)
-
+            .setFooter({text: `${moment(date.now).format("DD/MM/YYYY")}`})
         let amount = 1
 
         db.all(`SELECT * FROM levelstable ORDER BY messages DESC LIMIT 3`, (err, row) => {
@@ -22,7 +22,7 @@ module.exports = {
               leaderboardembed.addField(`**TOP ${amount}.**`, `**${user}** with ${messageCount} messages and level ${level}`)
                 amount++
             })
-            message.channel.send(leaderboardembed)
+            message.channel.send({embeds: [leaderboardembed]})
         })
     }
 }
